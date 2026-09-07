@@ -1,0 +1,56 @@
+name: Avionics Base Network Simulation
+slug: avionics-base-network
+
+category: experiments
+subcategory: "Computer Networks coursework (CS260L)"
+
+status: completed
+
+visibility: public
+
+description:
+  short: "A Cisco Packet Tracer simulation of a multi-site aviation network with OSPF routing, ~20 VLANs, and verified service reachability."
+  long: |
+    A Cisco Packet Tracer simulation of a fictional aviation-base network:
+    a headquarters site (firewall, router, distribution switch, DNS/FTP/
+    Web/Mail servers) connected to four factory sites via routed
+    point-to-point links, using OSPF area 0 for dynamic routing and around
+    20 department VLANs on separate /24 subnets. Built for a Computer
+    Networks lab (Air University, Semester 3, Fall 2024).
+
+technologies: ["Cisco Packet Tracer", "OSPF", "VLANs", "Cisco IOS"]
+tags: ["experiments", "networking", "ospf", "vlans", "packet-tracer"]
+
+repository:
+  provider: github
+  visibility: public
+  sync: true
+
+portfolio:
+  enabled: true
+  featured: false
+
+documentation:
+  readme: true
+  case_study: false
+
+dates:
+  started: null
+  completed: null
+
+links:
+  github: null
+  demo: null
+  documentation: null
+
+assets:
+  hero: topology/logical-diagram.png
+  screenshots:
+    - screenshots
+
+achievements: []
+
+metrics:
+  - label: "OSPF neighbor adjacencies verified FULL"
+    value: "all"
+    verified: true

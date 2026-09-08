@@ -1,0 +1,42 @@
+name: configgen CI
+
+on:
+  push:
+    paths:
+      - "configgen/**"
+      - ".github/workflows/configgen-ci.yml"
+  pull_request:
+    paths:
+      - "configgen/**"
+      - ".github/workflows/configgen-ci.yml"
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: configgen
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Install package and dev dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Lint (Ruff)
+        run: ruff check src tests
+
+      - name: Test (pytest)
+        run: pytest -q
+
+      - name: Regenerate real topology and verify against captured facts
+        run: |
+          avionics-net generate topology/avionics-real.yaml --output /tmp/generated
+          avionics-net verify topology/avionics-real.yaml --reference validation/historical-addressing.yaml

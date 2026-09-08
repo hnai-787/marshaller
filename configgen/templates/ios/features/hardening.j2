@@ -1,0 +1,16 @@
+no ip domain-lookup
+{% if device.hardening.domain_name %}
+ip domain-name {{ device.hardening.domain_name }}
+{% endif %}
+{% if device.hardening.service_password_encryption %}
+service password-encryption
+{% endif %}
+{% if device.hardening.disable_http_server %}
+no ip http server
+no ip http secure-server
+{% endif %}
+{% if device.hardening.logging_host %}
+logging host {{ device.hardening.logging_host }}
+logging trap debugging
+{% endif %}
+!

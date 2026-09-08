@@ -1,0 +1,97 @@
+# Real, already-verified facts transcribed from
+# ../../configs/avionics-base-network-configs.md -- the actual captured
+# `show` command output from the original Packet Tracer project. This is
+# the historical baseline `avionics-net verify` compares the generator's
+# output against; it is never regenerated, only read.
+#
+# router-id note: only the 7 devices whose router-id is DIRECTLY
+# observable in a captured `show ip ospf neighbor` table are listed here.
+# APF-DistSwitch/ARF-DistSwitch/MRF-DistSwitch's router-ids were never
+# captured in the original documentation (only HQ's and AMF's neighbor
+# tables were included as examples) -- the generator predicts them
+# consistently with the same "highest interface IP" policy confirmed by
+# these 7, but that prediction is not itself a verified historical fact,
+# so it is deliberately left out of this file. See PROJECT_NOTES.md.
+
+vlans:
+  "10": { subnet: 192.168.10.0/24, gateway: 192.168.10.1 }
+  "20": { subnet: 192.168.20.0/24, gateway: 192.168.20.1 }
+  "30": { subnet: 192.168.30.0/24, gateway: 192.168.30.1 }
+  "40": { subnet: 192.168.40.0/24, gateway: 192.168.40.1 }
+  "50": { subnet: 192.168.50.0/24, gateway: 192.168.50.1 }
+  "60": { subnet: 192.168.60.0/24, gateway: 192.168.60.1 }
+  "70": { subnet: 192.168.70.0/24, gateway: 192.168.70.1 }
+  "80": { subnet: 192.168.80.0/24, gateway: 192.168.80.1 }
+  "90": { subnet: 192.168.90.0/24, gateway: 192.168.90.1 }
+  "100": { subnet: 192.168.100.0/24, gateway: 192.168.100.1 }
+  "110": { subnet: 192.168.110.0/24, gateway: 192.168.110.1 }
+  "120": { subnet: 192.168.120.0/24, gateway: 192.168.120.1 }
+  "130": { subnet: 192.168.130.0/24, gateway: 192.168.130.1 }
+  "140": { subnet: 192.168.140.0/24, gateway: 192.168.140.1 }
+  "150": { subnet: 192.168.150.0/24, gateway: 192.168.150.1 }
+  "160": { subnet: 192.168.160.0/24, gateway: 192.168.160.1 }
+  "170": { subnet: 192.168.170.0/24, gateway: 192.168.170.1 }
+  "180": { subnet: 192.168.180.0/24, gateway: 192.168.180.1 }
+  "190": { subnet: 192.168.190.0/24, gateway: 192.168.190.1 }
+  "200": { subnet: 192.168.200.0/24, gateway: 192.168.200.1 }
+
+links:
+  fw-hq:
+    subnet: 10.0.0.0/30
+    endpoints:
+      "HQ-Router::GigabitEthernet0/1": 10.0.0.1
+      "HQ-FW::GigabitEthernet0/0": 10.0.0.2
+  hq-amf:
+    subnet: 10.0.0.4/30
+    endpoints:
+      "HQ-Router::Serial0/0/0": 10.0.0.5
+      "AMF-Router::Serial0/0/0": 10.0.0.6
+  hq-apf:
+    subnet: 10.0.0.8/30
+    endpoints:
+      "HQ-Router::Serial0/0/1": 10.0.0.9
+      "APF-Router::Serial0/0/0": 10.0.0.10
+  hq-arf:
+    subnet: 10.0.0.12/30
+    endpoints:
+      "HQ-Router::Serial0/1/0": 10.0.0.13
+      "ARF-Router::Serial0/0/0": 10.0.0.14
+  hq-mrf:
+    subnet: 10.0.0.16/30
+    endpoints:
+      "HQ-Router::Serial0/1/1": 10.0.0.17
+      "MRF-Router::Serial0/0/0": 10.0.0.18
+  hq-dist:
+    subnet: 192.168.1.0/30
+    endpoints:
+      "HQ-Router::GigabitEthernet0/0": 192.168.1.1
+      "HQ-DistSwitch::GigabitEthernet0/1": 192.168.1.2
+  amf-dist:
+    subnet: 192.168.1.4/30
+    endpoints:
+      "AMF-Router::GigabitEthernet0/0": 192.168.1.5
+      "AMF-DistSwitch::GigabitEthernet0/1": 192.168.1.6
+  apf-dist:
+    subnet: 192.168.1.8/30
+    endpoints:
+      "APF-Router::GigabitEthernet0/0": 192.168.1.9
+      "APF-DistSwitch::GigabitEthernet0/1": 192.168.1.10
+  arf-dist:
+    subnet: 192.168.1.12/30
+    endpoints:
+      "ARF-Router::GigabitEthernet0/0": 192.168.1.13
+      "ARF-DistSwitch::GigabitEthernet0/1": 192.168.1.14
+  mrf-dist:
+    subnet: 192.168.1.16/30
+    endpoints:
+      "MRF-Router::GigabitEthernet0/0": 192.168.1.17
+      "MRF-DistSwitch::GigabitEthernet0/1": 192.168.1.18
+
+routers:
+  HQ-Router: { router_id: 192.168.1.1 }
+  HQ-DistSwitch: { router_id: 192.168.30.1 }
+  AMF-Router: { router_id: 192.168.1.5 }
+  AMF-DistSwitch: { router_id: 192.168.70.1 }
+  APF-Router: { router_id: 192.168.1.9 }
+  ARF-Router: { router_id: 192.168.1.13 }
+  MRF-Router: { router_id: 192.168.1.17 }

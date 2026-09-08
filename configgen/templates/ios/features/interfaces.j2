@@ -1,0 +1,18 @@
+{% for iface in device.interfaces %}
+interface {{ iface.name }}
+{% if iface.description %}
+ description {{ iface.description }}
+{% endif %}
+{% if iface.mode == "routed" and iface.address %}
+ ip address {{ iface.address }} {{ iface.prefix_length | prefix_to_netmask }}
+ no shutdown
+{% elif iface.mode == "trunk" %}
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan {{ iface.allowed_vlans | join(",") }}
+{% elif iface.mode == "access" %}
+ switchport mode access
+ switchport access vlan {{ iface.access_vlan }}
+{% endif %}
+!
+{% endfor %}

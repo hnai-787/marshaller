@@ -1,0 +1,116 @@
+# SYNTHETIC DEMONSTRATION TOPOLOGY -- not a model of any real network.
+#
+# This exists purely to exercise the `computed` (VLSM) allocation path
+# end to end: three VLANs of different sizes on the same pool (to prove
+# largest-first ordering and stable tie-breaking), and a point-to-point
+# link allocated from a separate transit pool. The real avionics network
+# (topology/avionics-real.yaml) uses `mode: fixed` everywhere instead,
+# because its real historical addressing was not derived from this kind
+# of host-count-driven VLSM policy -- see PROJECT_NOTES.md for why that
+# distinction matters.
+version: 1
+
+address_pools:
+  campus:
+    cidr: 10.10.0.0/16
+    purpose: vlan
+  transit:
+    cidr: 10.255.0.0/24
+    purpose: point_to_point
+    default_prefix: 30
+
+sites:
+  hq:
+    name: Demo Headquarters
+  branch:
+    name: Demo Branch Office
+
+profiles:
+  baseline:
+    service_password_encryption: true
+    disable_http_server: true
+    logging_host: 10.10.99.10
+    domain_name: demo.local
+
+devices:
+  DEMO-HQ-R1:
+    site: hq
+    role: router
+    platform: cisco_ios
+    hardening_profile: baseline
+    interfaces:
+      GigabitEthernet0/0:
+        link: hq-branch
+      GigabitEthernet0/1:
+        mode: routed
+
+  DEMO-BR-R1:
+    site: branch
+    role: router
+    platform: cisco_ios
+    hardening_profile: baseline
+    interfaces:
+      GigabitEthernet0/0:
+        link: hq-branch
+
+  DEMO-HQ-SW1:
+    site: hq
+    role: switch
+    platform: cisco_ios
+    hardening_profile: baseline
+    # No VLAN SVIs declared here -- they're synthesized automatically
+    # from each vlan's `gateway` field below. Declaring them here too
+    # would create a duplicate-interface conflict (see validator.py).
+    interfaces: {}
+
+vlans:
+  - id: 10
+    name: engineering
+    site: hq
+    allocation:
+      mode: computed
+      hosts_required: 100
+      pool: campus
+    gateway:
+      device: DEMO-HQ-SW1
+      interface: Vlan10
+
+  - id: 20
+    name: operations
+    site: hq
+    allocation:
+      mode: computed
+      hosts_required: 50
+      pool: campus
+    gateway:
+      device: DEMO-HQ-SW1
+      interface: Vlan20
+
+  - id: 30
+    name: management
+    site: hq
+    allocation:
+      mode: computed
+      hosts_required: 20
+      pool: campus
+    gateway:
+      device: DEMO-HQ-SW1
+      interface: Vlan30
+
+links:
+  hq-branch:
+    type: point_to_point
+    allocation:
+      mode: computed
+      pool: transit
+      prefix_length: 30
+    endpoints:
+      - device: DEMO-HQ-R1
+        interface: GigabitEthernet0/0
+      - device: DEMO-BR-R1
+        interface: GigabitEthernet0/0
+
+routing:
+  ospf:
+    process_id: 1
+    default_area: 0

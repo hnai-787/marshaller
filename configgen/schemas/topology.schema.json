@@ -1,0 +1,169 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Avionics ConfigGen Topology",
+  "type": "object",
+  "required": ["version", "address_pools", "sites", "devices", "vlans", "links", "routing"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "const": 1 },
+    "address_pools": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["cidr", "purpose"],
+        "additionalProperties": false,
+        "properties": {
+          "cidr": { "type": "string" },
+          "purpose": { "enum": ["vlan", "point_to_point"] },
+          "default_prefix": { "type": "integer", "minimum": 1, "maximum": 32 }
+        }
+      }
+    },
+    "sites": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": { "name": { "type": "string" } }
+      }
+    },
+    "profiles": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "service_password_encryption": { "type": "boolean" },
+          "disable_http_server": { "type": "boolean" },
+          "logging_host": { "type": "string" },
+          "domain_name": { "type": "string" }
+        }
+      }
+    },
+    "devices": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["site", "role", "platform", "interfaces"],
+        "additionalProperties": false,
+        "properties": {
+          "site": { "type": "string" },
+          "role": { "enum": ["router", "switch"] },
+          "platform": { "const": "cisco_ios" },
+          "hardening_profile": { "type": "string" },
+          "ospf_enabled": { "type": "boolean" },
+          "interfaces": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "link": { "type": "string" },
+                "mode": { "enum": ["routed", "trunk", "access"] },
+                "allowed_vlans": {
+                  "type": "array",
+                  "items": { "type": "integer" }
+                },
+                "access_vlan": { "type": "integer" },
+                "description": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "vlans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "site", "allocation"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "integer", "minimum": 1, "maximum": 4094 },
+          "name": { "type": "string" },
+          "site": { "type": "string" },
+          "allocation": {
+            "type": "object",
+            "required": ["mode"],
+            "additionalProperties": false,
+            "properties": {
+              "mode": { "enum": ["computed", "fixed"] },
+              "hosts_required": { "type": "integer", "minimum": 1 },
+              "pool": { "type": "string" },
+              "subnet": { "type": "string" }
+            }
+          },
+          "gateway": {
+            "type": "object",
+            "required": ["device", "interface"],
+            "additionalProperties": false,
+            "properties": {
+              "device": { "type": "string" },
+              "interface": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "links": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["type", "endpoints", "allocation"],
+        "additionalProperties": false,
+        "properties": {
+          "type": { "const": "point_to_point" },
+          "allocation": {
+            "type": "object",
+            "required": ["mode"],
+            "additionalProperties": false,
+            "properties": {
+              "mode": { "enum": ["computed", "fixed"] },
+              "pool": { "type": "string" },
+              "prefix_length": { "type": "integer", "minimum": 1, "maximum": 31 },
+              "subnet": { "type": "string" }
+            }
+          },
+          "endpoints": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "object",
+              "required": ["device", "interface"],
+              "additionalProperties": false,
+              "properties": {
+                "device": { "type": "string" },
+                "interface": { "type": "string" },
+                "address": {
+                  "type": "string",
+                  "description": "Explicit address for this endpoint, required for allocation.mode=fixed since which side owns which address isn't derivable from the subnet alone."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "routing": {
+      "type": "object",
+      "required": ["ospf"],
+      "additionalProperties": false,
+      "properties": {
+        "ospf": {
+          "type": "object",
+          "required": ["process_id", "default_area"],
+          "additionalProperties": false,
+          "properties": {
+            "process_id": { "type": "integer", "minimum": 1 },
+            "default_area": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    }
+  }
+}

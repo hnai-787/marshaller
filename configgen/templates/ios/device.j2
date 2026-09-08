@@ -1,0 +1,13 @@
+{% include "ios/features/base.j2" %}
+!
+{% include "ios/features/interfaces.j2" %}
+{% if device.role == "switch" and device.vlans %}
+{% include "ios/features/vlans.j2" %}
+{% endif %}
+{% if device.ospf %}
+{% include "ios/features/ospf.j2" %}
+{% endif %}
+{% if device.hardening %}
+{% include "ios/features/hardening.j2" %}
+{% endif %}
+end

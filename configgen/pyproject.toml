@@ -1,0 +1,26 @@
+[project]
+name = "avionics-configgen"
+version = "1.0.0"
+description = "Declarative Cisco IOS configuration generator for the avionics base network project"
+requires-python = ">=3.11"
+dependencies = [
+    "Jinja2>=3.1,<4",
+    "PyYAML>=6,<7",
+    "jsonschema>=4,<5",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+avionics-net = "avionics_configgen.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

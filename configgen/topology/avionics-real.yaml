@@ -1,0 +1,269 @@
+# The real Avionics Base Network topology, transcribed from the
+# already-verified addressing captured in
+# ../../configs/avionics-base-network-configs.md.
+#
+# Every VLAN and link below uses `allocation.mode: fixed` -- this
+# reproduces real, already-verified historical addressing exactly rather
+# than re-deriving it with the VLSM allocator (see
+# topology/demo-vlsm-example.yaml for that). The original numbering was
+# not host-count-driven VLSM (every VLAN is a flat /24 regardless of how
+# many hosts it actually needs), so running it through the VLSM allocator
+# would not "verify" anything -- it would just coincidentally reproduce
+# numbers that were placed by hand. See PROJECT_NOTES.md for the full
+# reasoning.
+#
+# VLAN 200 (Wireless Access Network) intentionally has no `gateway`
+# field: the original documentation records its subnet/gateway address
+# but never attributes it to a specific device, so this topology doesn't
+# invent one either.
+version: 1
+
+address_pools:
+  # Not consumed by any allocation here (everything below is `fixed`) --
+  # documented for completeness/future use if a new site is ever added
+  # with `mode: computed`.
+  campus:
+    cidr: 192.168.0.0/16
+    purpose: vlan
+  transit:
+    cidr: 10.0.0.0/24
+    purpose: point_to_point
+    default_prefix: 30
+
+sites:
+  hq:
+    name: Headquarters
+  amf:
+    name: Aircraft Manufacturing Facility
+  apf:
+    name: Avionics Production Facility
+  arf:
+    name: Aircraft Repair Facility
+  mrf:
+    name: Maintenance and Repair Facility
+
+profiles:
+  baseline:
+    service_password_encryption: true
+    disable_http_server: true
+    logging_host: 192.168.30.10
+    domain_name: aoh.local
+
+devices:
+  HQ-FW:
+    site: hq
+    role: router
+    platform: cisco_ios
+    hardening_profile: baseline
+    # Not part of the captured OSPF neighbor tables in the original
+    # documentation -- modeled as not participating in OSPF.
+    ospf_enabled: false
+    interfaces:
+      GigabitEthernet0/0:
+        link: fw-hq
+
+  HQ-Router:
+    site: hq
+    role: router
+    platform: cisco_ios
+    hardening_profile: baseline
+    interfaces:
+      GigabitEthernet0/0:
+        link: hq-dist
+      GigabitEthernet0/1:
+        link: fw-hq
+      Serial0/0/0:
+        link: hq-amf
+      Serial0/0/1:
+        link: hq-apf
+      Serial0/1/0:
+        link: hq-arf
+      Serial0/1/1:
+        link: hq-mrf
+
+  HQ-DistSwitch:
+    site: hq
+    role: switch
+    platform: cisco_ios
+    hardening_profile: baseline
+    interfaces:
+      GigabitEthernet0/1:
+        link: hq-dist
+
+  AMF-Router:
+    site: amf
+    role: router
+    platform: cisco_ios
+    hardening_profile: baseline
+    interfaces:
+      GigabitEthernet0/0:
+        link: amf-dist
+      Serial0/0/0:
+        link: hq-amf
+
+  AMF-DistSwitch:
+    site: amf
+    role: switch
+    platform: cisco_ios
+    hardening_profile: baseline
+    interfaces:
+      GigabitEthernet0/1:
+        link: amf-dist
+
+  APF-Router:
+    site: apf
+    role: router
+    platform: cisco_ios
+    hardening_profile: baseline
+    interfaces:
+      GigabitEthernet0/0:
+        link: apf-dist
+      Serial0/0/0:
+        link: hq-apf
+
+  APF-DistSwitch:
+    site: apf
+    role: switch
+    platform: cisco_ios
+    hardening_profile: baseline
+    interfaces:
+      GigabitEthernet0/1:
+        link: apf-dist
+
+  ARF-Router:
+    site: arf
+    role: router
+    platform: cisco_ios
+    hardening_profile: baseline
+    interfaces:
+      GigabitEthernet0/0:
+        link: arf-dist
+      Serial0/0/0:
+        link: hq-arf
+
+  ARF-DistSwitch:
+    site: arf
+    role: switch
+    platform: cisco_ios
+    hardening_profile: baseline
+    interfaces:
+      GigabitEthernet0/1:
+        link: arf-dist
+
+  MRF-Router:
+    site: mrf
+    role: router
+    platform: cisco_ios
+    hardening_profile: baseline
+    interfaces:
+      GigabitEthernet0/0:
+        link: mrf-dist
+      Serial0/0/0:
+        link: hq-mrf
+
+  MRF-DistSwitch:
+    site: mrf
+    role: switch
+    platform: cisco_ios
+    hardening_profile: baseline
+    interfaces:
+      GigabitEthernet0/1:
+        link: mrf-dist
+
+vlans:
+  - { id: 10, name: hq-data-center, site: hq, allocation: { mode: fixed, subnet: 192.168.10.0/24 }, gateway: { device: HQ-DistSwitch, interface: Vlan10 } }
+  - { id: 20, name: hq-control-center, site: hq, allocation: { mode: fixed, subnet: 192.168.20.0/24 }, gateway: { device: HQ-DistSwitch, interface: Vlan20 } }
+  - { id: 30, name: hq-soc, site: hq, allocation: { mode: fixed, subnet: 192.168.30.0/24 }, gateway: { device: HQ-DistSwitch, interface: Vlan30 } }
+  - { id: 40, name: amf-design-and-development, site: amf, allocation: { mode: fixed, subnet: 192.168.40.0/24 }, gateway: { device: AMF-DistSwitch, interface: Vlan40 } }
+  - { id: 50, name: amf-prototyping-and-testing, site: amf, allocation: { mode: fixed, subnet: 192.168.50.0/24 }, gateway: { device: AMF-DistSwitch, interface: Vlan50 } }
+  - { id: 60, name: amf-quality-control, site: amf, allocation: { mode: fixed, subnet: 192.168.60.0/24 }, gateway: { device: AMF-DistSwitch, interface: Vlan60 } }
+  - { id: 70, name: amf-support-services, site: amf, allocation: { mode: fixed, subnet: 192.168.70.0/24 }, gateway: { device: AMF-DistSwitch, interface: Vlan70 } }
+  - { id: 80, name: apf-avionics-design, site: apf, allocation: { mode: fixed, subnet: 192.168.80.0/24 }, gateway: { device: APF-DistSwitch, interface: Vlan80 } }
+  - { id: 90, name: apf-production, site: apf, allocation: { mode: fixed, subnet: 192.168.90.0/24 }, gateway: { device: APF-DistSwitch, interface: Vlan90 } }
+  - { id: 100, name: apf-testing-and-calibration, site: apf, allocation: { mode: fixed, subnet: 192.168.100.0/24 }, gateway: { device: APF-DistSwitch, interface: Vlan100 } }
+  - { id: 110, name: apf-support-services, site: apf, allocation: { mode: fixed, subnet: 192.168.110.0/24 }, gateway: { device: APF-DistSwitch, interface: Vlan110 } }
+  - { id: 120, name: arf-overhaul-division, site: arf, allocation: { mode: fixed, subnet: 192.168.120.0/24 }, gateway: { device: ARF-DistSwitch, interface: Vlan120 } }
+  - { id: 130, name: arf-repair-division, site: arf, allocation: { mode: fixed, subnet: 192.168.130.0/24 }, gateway: { device: ARF-DistSwitch, interface: Vlan130 } }
+  - { id: 140, name: arf-testing-and-certification, site: arf, allocation: { mode: fixed, subnet: 192.168.140.0/24 }, gateway: { device: ARF-DistSwitch, interface: Vlan140 } }
+  - { id: 150, name: arf-support-services, site: arf, allocation: { mode: fixed, subnet: 192.168.150.0/24 }, gateway: { device: ARF-DistSwitch, interface: Vlan150 } }
+  - { id: 160, name: mrf-overhaul-division, site: mrf, allocation: { mode: fixed, subnet: 192.168.160.0/24 }, gateway: { device: MRF-DistSwitch, interface: Vlan160 } }
+  - { id: 170, name: mrf-repair-division, site: mrf, allocation: { mode: fixed, subnet: 192.168.170.0/24 }, gateway: { device: MRF-DistSwitch, interface: Vlan170 } }
+  - { id: 180, name: mrf-testing-division, site: mrf, allocation: { mode: fixed, subnet: 192.168.180.0/24 }, gateway: { device: MRF-DistSwitch, interface: Vlan180 } }
+  - { id: 190, name: mrf-support-services, site: mrf, allocation: { mode: fixed, subnet: 192.168.190.0/24 }, gateway: { device: MRF-DistSwitch, interface: Vlan190 } }
+  - { id: 200, name: wireless-access-network, site: hq, allocation: { mode: fixed, subnet: 192.168.200.0/24 } }
+
+links:
+  fw-hq:
+    type: point_to_point
+    allocation: { mode: fixed, subnet: 10.0.0.0/30 }
+    endpoints:
+      - { device: HQ-Router, interface: GigabitEthernet0/1, address: 10.0.0.1 }
+      - { device: HQ-FW, interface: GigabitEthernet0/0, address: 10.0.0.2 }
+
+  hq-amf:
+    type: point_to_point
+    allocation: { mode: fixed, subnet: 10.0.0.4/30 }
+    endpoints:
+      - { device: HQ-Router, interface: Serial0/0/0, address: 10.0.0.5 }
+      - { device: AMF-Router, interface: Serial0/0/0, address: 10.0.0.6 }
+
+  hq-apf:
+    type: point_to_point
+    allocation: { mode: fixed, subnet: 10.0.0.8/30 }
+    endpoints:
+      - { device: HQ-Router, interface: Serial0/0/1, address: 10.0.0.9 }
+      - { device: APF-Router, interface: Serial0/0/0, address: 10.0.0.10 }
+
+  hq-arf:
+    type: point_to_point
+    allocation: { mode: fixed, subnet: 10.0.0.12/30 }
+    endpoints:
+      - { device: HQ-Router, interface: Serial0/1/0, address: 10.0.0.13 }
+      - { device: ARF-Router, interface: Serial0/0/0, address: 10.0.0.14 }
+
+  hq-mrf:
+    type: point_to_point
+    allocation: { mode: fixed, subnet: 10.0.0.16/30 }
+    endpoints:
+      - { device: HQ-Router, interface: Serial0/1/1, address: 10.0.0.17 }
+      - { device: MRF-Router, interface: Serial0/0/0, address: 10.0.0.18 }
+
+  hq-dist:
+    type: point_to_point
+    allocation: { mode: fixed, subnet: 192.168.1.0/30 }
+    endpoints:
+      - { device: HQ-Router, interface: GigabitEthernet0/0, address: 192.168.1.1 }
+      - { device: HQ-DistSwitch, interface: GigabitEthernet0/1, address: 192.168.1.2 }
+
+  amf-dist:
+    type: point_to_point
+    allocation: { mode: fixed, subnet: 192.168.1.4/30 }
+    endpoints:
+      - { device: AMF-Router, interface: GigabitEthernet0/0, address: 192.168.1.5 }
+      - { device: AMF-DistSwitch, interface: GigabitEthernet0/1, address: 192.168.1.6 }
+
+  apf-dist:
+    type: point_to_point
+    allocation: { mode: fixed, subnet: 192.168.1.8/30 }
+    endpoints:
+      - { device: APF-Router, interface: GigabitEthernet0/0, address: 192.168.1.9 }
+      - { device: APF-DistSwitch, interface: GigabitEthernet0/1, address: 192.168.1.10 }
+
+  arf-dist:
+    type: point_to_point
+    allocation: { mode: fixed, subnet: 192.168.1.12/30 }
+    endpoints:
+      - { device: ARF-Router, interface: GigabitEthernet0/0, address: 192.168.1.13 }
+      - { device: ARF-DistSwitch, interface: GigabitEthernet0/1, address: 192.168.1.14 }
+
+  mrf-dist:
+    type: point_to_point
+    allocation: { mode: fixed, subnet: 192.168.1.16/30 }
+    endpoints:
+      - { device: MRF-Router, interface: GigabitEthernet0/0, address: 192.168.1.17 }
+      - { device: MRF-DistSwitch, interface: GigabitEthernet0/1, address: 192.168.1.18 }
+
+routing:
+  ospf:
+    process_id: 1
+    default_area: 0

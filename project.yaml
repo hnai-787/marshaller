@@ -9,7 +9,7 @@ status: completed
 visibility: public
 
 description:
-  short: "A Cisco Packet Tracer simulation of a multi-site aviation network with OSPF routing, ~20 VLANs, and verified service reachability."
+  short: "A Cisco Packet Tracer aviation-network simulation (OSPF, ~20 VLANs), plus avionics-configgen: a declarative Python/Jinja2 IOS config generator that reproduces all 77 of its real captured addressing facts exactly."
   long: |
     A Cisco Packet Tracer simulation of a fictional aviation-base network:
     a headquarters site (firewall, router, distribution switch, DNS/FTP/
@@ -17,9 +17,17 @@ description:
     point-to-point links, using OSPF area 0 for dynamic routing and around
     20 department VLANs on separate /24 subnets. Built for a Computer
     Networks lab (Air University, Semester 3, Fall 2024).
+    Added avionics-configgen: a declarative Cisco IOS configuration
+    generator (YAML topology -> VLSM IP planner -> device-independent
+    resolved model -> Jinja templates -> IOS config), modeled on the same
+    pattern used by Ansible resource modules and Cisco NSO. Verified by
+    regenerating this exact network's real, previously-captured
+    addressing facts -- all 77 match exactly, including an OSPF
+    router-id policy corrected to Cisco's real default behavior after
+    cross-referencing the original captured neighbor-table evidence.
 
-technologies: ["Cisco Packet Tracer", "OSPF", "VLANs", "Cisco IOS"]
-tags: ["experiments", "networking", "ospf", "vlans", "packet-tracer"]
+technologies: ["Cisco Packet Tracer", "OSPF", "VLANs", "Cisco IOS", "Python", "Jinja2", "JSON Schema", "pytest", "Ruff", "GitHub Actions"]
+tags: ["experiments", "networking", "ospf", "vlans", "packet-tracer", "network-automation", "ipam", "config-generation", "cli-tool"]
 
 repository:
   provider: github
@@ -28,7 +36,7 @@ repository:
 
 portfolio:
   enabled: true
-  featured: false
+  featured: true
 
 documentation:
   readme: true
@@ -53,4 +61,13 @@ achievements: []
 metrics:
   - label: "OSPF neighbor adjacencies verified FULL"
     value: "all"
+    verified: true
+  - label: "avionics-configgen: real captured addressing facts reproduced exactly"
+    value: "77/77"
+    verified: true
+  - label: "avionics-configgen: automated tests passing"
+    value: "26/26"
+    verified: true
+  - label: "avionics-configgen: Ruff lint issues"
+    value: "0"
     verified: true

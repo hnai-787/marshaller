@@ -1,5 +1,5 @@
-name: Avionics Base Network Simulation
-slug: avionics-base-network
+name: ConfigGen
+slug: configgen
 
 category: experiments
 subcategory: "Computer Networks coursework (CS260L)"

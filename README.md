@@ -1,4 +1,4 @@
-# Avionics Base Network Simulation + avionics-configgen
+# ConfigGen — Cisco IOS Config Generator + Avionics Network Simulation
 
 ## Course Information
 

@@ -1,5 +1,5 @@
-name: ConfigGen
-slug: configgen
+name: Marshaller
+slug: marshaller
 
 category: experiments
 subcategory: "Computer Networks coursework (CS260L)"
@@ -47,12 +47,12 @@ dates:
   completed: null
 
 links:
-  github: https://github.com/Hussain-Ali-787/configgen
+  github: https://github.com/Hussain-Ali-787/marshaller
   demo: null
   documentation: null
 
 assets:
-  hero: assets/brand/configgen-readme-banner.png
+  hero: assets/brand/marshaller-readme-banner.png
   screenshots:
     - screenshots
 

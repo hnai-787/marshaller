@@ -1,6 +1,8 @@
-# ConfigGen — Cisco IOS Config Generator + Avionics Network Simulation
+# Marshaller — Cisco IOS Config Generator
 
-![configgen banner](assets/brand/configgen-readme-banner.png)
+![marshaller banner](assets/brand/marshaller-readme-banner.png)
+
+*Ships as the `avionics-configgen` CLI/library — see below.*
 
 
 ## Course Information
@@ -100,7 +102,7 @@ original verified engineering.)*
 
 ## How It Works
 
-![How configgen works](assets/brand/configgen-how-it-works.png)
+![How marshaller works](assets/brand/marshaller-how-it-works.png)
 
 ## Repository Structure
 

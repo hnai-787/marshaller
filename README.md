@@ -1,5 +1,8 @@
 # ConfigGen — Cisco IOS Config Generator + Avionics Network Simulation
 
+![configgen banner](assets/brand/configgen-readme-banner.png)
+
+
 ## Course Information
 
 | Field | Details |
@@ -94,6 +97,10 @@ original verified engineering.)*
 5. **New:** model that same network declaratively, build a deterministic
    generator, and verify it reproduces the real addressing facts exactly
    — see `configgen/README.md` "Methodology" for the full pipeline.
+
+## How It Works
+
+![How configgen works](assets/brand/configgen-how-it-works.png)
 
 ## Repository Structure
 

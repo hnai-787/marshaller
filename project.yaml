@@ -52,7 +52,7 @@ links:
   documentation: null
 
 assets:
-  hero: topology/logical-diagram.png
+  hero: assets/brand/configgen-readme-banner.png
   screenshots:
     - screenshots
 

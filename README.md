@@ -5,18 +5,9 @@
 *Ships as the `avionics-configgen` CLI/library — see below.*
 
 
-## Course Information
-
-| Field | Details |
-|---|---|
-| Course | Computer Networks Lab (CS260L) |
-| Semester | Semester 3 — Fall 2024 |
-| University | Air University, Islamabad |
-| Students | Hussain Ali (232095), Ahmad Ali (232147) |
-
 ## Overview
 
-The original coursework is a Cisco Packet Tracer simulation of a
+The original version is a Cisco Packet Tracer simulation of a
 multi-site aviation-base network: a headquarters site connected to four
 factory sites via routed point-to-point links, using OSPF for dynamic
 routing and department-level VLAN segmentation — hand-configured in the
@@ -220,4 +211,4 @@ for the OSPF router-id analysis this verification uncovered.
 
 ## Ethical Notice
 
-Academic coursework exercise; no ethical concerns apply.
+Personal project; no ethical concerns apply.

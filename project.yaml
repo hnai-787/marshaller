@@ -2,7 +2,7 @@ name: Marshaller
 slug: marshaller
 
 category: experiments
-subcategory: "Computer Networks coursework (CS260L)"
+subcategory: "Computer Networks"
 
 status: completed
 
@@ -15,8 +15,7 @@ description:
     a headquarters site (firewall, router, distribution switch, DNS/FTP/
     Web/Mail servers) connected to four factory sites via routed
     point-to-point links, using OSPF area 0 for dynamic routing and around
-    20 department VLANs on separate /24 subnets. Built for a Computer
-    Networks lab (Air University, Semester 3, Fall 2024).
+    20 department VLANs on separate /24 subnets.
     Added avionics-configgen: a declarative Cisco IOS configuration
     generator (YAML topology -> VLSM IP planner -> device-independent
     resolved model -> Jinja templates -> IOS config), modeled on the same

@@ -12,9 +12,9 @@ None needed — no build output. All lab credentials in configs already use
 
 ## Assumptions
 
-- Co-author "Ahmad Ali (232147)" is taken from the docx report and pptx —
-  kept per the decision to preserve standard academic group-project
-  attribution.
+- Co-author "Ahmad Ali (232147)" is credited in the original docx report
+  and pptx. The course-info table that used to surface this in the README
+  was later removed along with other academic framing.
 
 ## Remaining work
 

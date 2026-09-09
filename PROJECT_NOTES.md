@@ -12,9 +12,7 @@ None needed — no build output. All lab credentials in configs already use
 
 ## Assumptions
 
-- Co-author "Ahmad Ali (232147)" is credited in the original docx report
-  and pptx. The course-info table that used to surface this in the README
-  was later removed along with other academic framing.
+None.
 
 ## Remaining work
 

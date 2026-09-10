@@ -98,7 +98,7 @@ original verified engineering.)*
 ## Repository Structure
 
 ```text
-avionics-base-network/
+marshaller/
   README.md, PROJECT_NOTES.md, CHANGELOG.md, project.yaml
   configgen/                    NEW: the declarative IOS config generator
     README.md                   full design writeup and research grounding
@@ -113,11 +113,13 @@ avionics-base-network/
   configs/avionics-base-network-configs.md             original, untouched
   screenshots/verification-commands.md
   topology/logical-diagram.png
-  docs/avionics-base-network-report.docx
-  presentation/avionics-base-network-presentation.pptx
   screenshots/
   .github/workflows/configgen-ci.yml   NEW: Ruff + pytest + regenerate + verify
 ```
+
+The original written report and presentation have been moved out of this
+repository into a personal academic-archive repo. `TODO`: link to that
+repo once it's published.
 
 ## Setup Instructions
 
@@ -147,7 +149,9 @@ avionics-net verify topology/avionics-real.yaml --reference validation/historica
 
 ## How to Review
 
-1. Start with this README, then `docs/avionics-base-network-report.docx` for the original.
+1. Start with this README (the original written report is archived
+   outside this repository — see the note in "Repository Structure"
+   above).
 2. Review `topology/logical-diagram.png` for the overall design.
 3. Check `configs/avionics-base-network-configs.md` and `screenshots/verification-commands.md` for real verification command output.
 4. Open the `.pkt` file to explore the live simulation.

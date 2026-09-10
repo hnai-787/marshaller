@@ -11,6 +11,15 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ### Fixed
 
+- README's Repository Structure still said `avionics-base-network/` from
+  before the product-name rebrand; corrected to `marshaller/`.
+- README's Repository Structure and "How to Review" still referenced
+  `docs/avionics-base-network-report.docx` and
+  `presentation/avionics-base-network-presentation.pptx`, both of which
+  were removed from this repository earlier in this project's history
+  (they named a real collaborator); replaced with an accurate note that
+  they're archived outside this repository.
+
 ## [1.1.0] - 2026-09-08
 
 ### Added
